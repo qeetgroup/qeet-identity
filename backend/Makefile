@@ -1,7 +1,7 @@
 .PHONY: tidy build run test migrate-up migrate-down lint docker-up docker-down
 
 GO ?= go
-DB_URL ?= postgres://qeet:qeet@localhost:5432/qeet_identity?sslmode=disable
+DB_URL ?= postgres://postgres:password@localhost:5001/qeet_identity?sslmode=disable
 
 tidy:
 	$(GO) mod tidy

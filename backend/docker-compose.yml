@@ -2,11 +2,11 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: qeet
-      POSTGRES_PASSWORD: qeet
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: qeet_identity
     ports:
-      - "5432:5432"
+      - "5001:5001"
     volumes:
       - qeet_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -25,7 +25,7 @@ services:
       SERVICE_ENV: dev
       HTTP_PORT: "4000"
       LOG_LEVEL: info
-      DB_URL: postgres://qeet:qeet@postgres:5432/qeet_identity?sslmode=disable
+      DB_URL: postgres://postgres:password@postgres:5001/qeet_identity?sslmode=disable
       JWT_SECRET: dev-secret-do-not-use-in-prod-32b
       JWT_ISSUER: qeet-identity
       JWT_AUDIENCE: qeet-identity
