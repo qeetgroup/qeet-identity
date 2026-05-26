@@ -32,6 +32,7 @@ import { Route as AppUsersSessionsRouteImport } from './routes/_app/users/sessio
 import { Route as AppUsersInvitationsRouteImport } from './routes/_app/users/invitations'
 import { Route as AppUsersImportRouteImport } from './routes/_app/users/import'
 import { Route as AppUsersDeletedRouteImport } from './routes/_app/users/deleted'
+import { Route as AppUsersUserIdRouteImport } from './routes/_app/users/$userId'
 import { Route as AppSettingsBrandingRouteImport } from './routes/_app/settings/branding'
 import { Route as AppSettingsBillingRouteImport } from './routes/_app/settings/billing'
 import { Route as AppSecuritySessionsRouteImport } from './routes/_app/security/sessions'
@@ -58,6 +59,7 @@ import { Route as AppSecurityComplianceSoc2RouteImport } from './routes/_app/sec
 import { Route as AppSecurityComplianceRetentionRouteImport } from './routes/_app/security/compliance/retention'
 import { Route as AppSecurityComplianceIso27001RouteImport } from './routes/_app/security/compliance/iso27001'
 import { Route as AppSecurityComplianceGdprRouteImport } from './routes/_app/security/compliance/gdpr'
+import { Route as AppDeveloperWebhooksIdRouteImport } from './routes/_app/developer/webhooks.$id'
 import { Route as AppAuthMfaTotpRouteImport } from './routes/_app/auth/mfa/totp'
 import { Route as AppAuthMfaSmsEmailRouteImport } from './routes/_app/auth/mfa/sms-email'
 import { Route as AppAuthMfaRecoveryCodesRouteImport } from './routes/_app/auth/mfa/recovery-codes'
@@ -73,6 +75,7 @@ import { Route as AppAuthApiTokensRouteImport } from './routes/_app/auth/api/tok
 import { Route as AppAuthApiSecretsRouteImport } from './routes/_app/auth/api/secrets'
 import { Route as AppAuthApiMachineIdentitiesRouteImport } from './routes/_app/auth/api/machine-identities'
 import { Route as AppAuthApiKeysRouteImport } from './routes/_app/auth/api/keys'
+import { Route as AppAccessRolesRoleIdRouteImport } from './routes/_app/access/roles.$roleId'
 
 const AccountRoute = AccountRouteImport.update({
   id: '/account',
@@ -185,6 +188,11 @@ const AppUsersImportRoute = AppUsersImportRouteImport.update({
 const AppUsersDeletedRoute = AppUsersDeletedRouteImport.update({
   id: '/deleted',
   path: '/deleted',
+  getParentRoute: () => AppUsersRoute,
+} as any)
+const AppUsersUserIdRoute = AppUsersUserIdRouteImport.update({
+  id: '/$userId',
+  path: '/$userId',
   getParentRoute: () => AppUsersRoute,
 } as any)
 const AppSettingsBrandingRoute = AppSettingsBrandingRouteImport.update({
@@ -328,6 +336,11 @@ const AppSecurityComplianceGdprRoute =
     path: '/security/compliance/gdpr',
     getParentRoute: () => AppRoute,
   } as any)
+const AppDeveloperWebhooksIdRoute = AppDeveloperWebhooksIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppDeveloperWebhooksRoute,
+} as any)
 const AppAuthMfaTotpRoute = AppAuthMfaTotpRouteImport.update({
   id: '/auth/mfa/totp',
   path: '/auth/mfa/totp',
@@ -408,6 +421,11 @@ const AppAuthApiKeysRoute = AppAuthApiKeysRouteImport.update({
   path: '/auth/api/keys',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAccessRolesRoleIdRoute = AppAccessRolesRoleIdRouteImport.update({
+  id: '/$roleId',
+  path: '/$roleId',
+  getParentRoute: () => AppAccessRolesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -430,11 +448,11 @@ export interface FileRoutesByFullPath {
   '/access/permissions': typeof AppAccessPermissionsRoute
   '/access/policies': typeof AppAccessPoliciesRoute
   '/access/resources': typeof AppAccessResourcesRoute
-  '/access/roles': typeof AppAccessRolesRoute
+  '/access/roles': typeof AppAccessRolesRouteWithChildren
   '/auth/social': typeof AppAuthSocialRoute
   '/developer/bots': typeof AppDeveloperBotsRoute
   '/developer/infrastructure': typeof AppDeveloperInfrastructureRoute
-  '/developer/webhooks': typeof AppDeveloperWebhooksRoute
+  '/developer/webhooks': typeof AppDeveloperWebhooksRouteWithChildren
   '/organizations/members': typeof AppOrganizationsMembersRoute
   '/organizations/tenants': typeof AppOrganizationsTenantsRoute
   '/security/audit-logs': typeof AppSecurityAuditLogsRoute
@@ -442,10 +460,12 @@ export interface FileRoutesByFullPath {
   '/security/sessions': typeof AppSecuritySessionsRoute
   '/settings/billing': typeof AppSettingsBillingRoute
   '/settings/branding': typeof AppSettingsBrandingRoute
+  '/users/$userId': typeof AppUsersUserIdRoute
   '/users/deleted': typeof AppUsersDeletedRoute
   '/users/import': typeof AppUsersImportRoute
   '/users/invitations': typeof AppUsersInvitationsRoute
   '/users/sessions': typeof AppUsersSessionsRoute
+  '/access/roles/$roleId': typeof AppAccessRolesRoleIdRoute
   '/auth/api/keys': typeof AppAuthApiKeysRoute
   '/auth/api/machine-identities': typeof AppAuthApiMachineIdentitiesRoute
   '/auth/api/secrets': typeof AppAuthApiSecretsRoute
@@ -461,6 +481,7 @@ export interface FileRoutesByFullPath {
   '/auth/mfa/recovery-codes': typeof AppAuthMfaRecoveryCodesRoute
   '/auth/mfa/sms-email': typeof AppAuthMfaSmsEmailRoute
   '/auth/mfa/totp': typeof AppAuthMfaTotpRoute
+  '/developer/webhooks/$id': typeof AppDeveloperWebhooksIdRoute
   '/security/compliance/gdpr': typeof AppSecurityComplianceGdprRoute
   '/security/compliance/iso27001': typeof AppSecurityComplianceIso27001Route
   '/security/compliance/retention': typeof AppSecurityComplianceRetentionRoute
@@ -494,11 +515,11 @@ export interface FileRoutesByTo {
   '/access/permissions': typeof AppAccessPermissionsRoute
   '/access/policies': typeof AppAccessPoliciesRoute
   '/access/resources': typeof AppAccessResourcesRoute
-  '/access/roles': typeof AppAccessRolesRoute
+  '/access/roles': typeof AppAccessRolesRouteWithChildren
   '/auth/social': typeof AppAuthSocialRoute
   '/developer/bots': typeof AppDeveloperBotsRoute
   '/developer/infrastructure': typeof AppDeveloperInfrastructureRoute
-  '/developer/webhooks': typeof AppDeveloperWebhooksRoute
+  '/developer/webhooks': typeof AppDeveloperWebhooksRouteWithChildren
   '/organizations/members': typeof AppOrganizationsMembersRoute
   '/organizations/tenants': typeof AppOrganizationsTenantsRoute
   '/security/audit-logs': typeof AppSecurityAuditLogsRoute
@@ -506,10 +527,12 @@ export interface FileRoutesByTo {
   '/security/sessions': typeof AppSecuritySessionsRoute
   '/settings/billing': typeof AppSettingsBillingRoute
   '/settings/branding': typeof AppSettingsBrandingRoute
+  '/users/$userId': typeof AppUsersUserIdRoute
   '/users/deleted': typeof AppUsersDeletedRoute
   '/users/import': typeof AppUsersImportRoute
   '/users/invitations': typeof AppUsersInvitationsRoute
   '/users/sessions': typeof AppUsersSessionsRoute
+  '/access/roles/$roleId': typeof AppAccessRolesRoleIdRoute
   '/auth/api/keys': typeof AppAuthApiKeysRoute
   '/auth/api/machine-identities': typeof AppAuthApiMachineIdentitiesRoute
   '/auth/api/secrets': typeof AppAuthApiSecretsRoute
@@ -525,6 +548,7 @@ export interface FileRoutesByTo {
   '/auth/mfa/recovery-codes': typeof AppAuthMfaRecoveryCodesRoute
   '/auth/mfa/sms-email': typeof AppAuthMfaSmsEmailRoute
   '/auth/mfa/totp': typeof AppAuthMfaTotpRoute
+  '/developer/webhooks/$id': typeof AppDeveloperWebhooksIdRoute
   '/security/compliance/gdpr': typeof AppSecurityComplianceGdprRoute
   '/security/compliance/iso27001': typeof AppSecurityComplianceIso27001Route
   '/security/compliance/retention': typeof AppSecurityComplianceRetentionRoute
@@ -561,11 +585,11 @@ export interface FileRoutesById {
   '/_app/access/permissions': typeof AppAccessPermissionsRoute
   '/_app/access/policies': typeof AppAccessPoliciesRoute
   '/_app/access/resources': typeof AppAccessResourcesRoute
-  '/_app/access/roles': typeof AppAccessRolesRoute
+  '/_app/access/roles': typeof AppAccessRolesRouteWithChildren
   '/_app/auth/social': typeof AppAuthSocialRoute
   '/_app/developer/bots': typeof AppDeveloperBotsRoute
   '/_app/developer/infrastructure': typeof AppDeveloperInfrastructureRoute
-  '/_app/developer/webhooks': typeof AppDeveloperWebhooksRoute
+  '/_app/developer/webhooks': typeof AppDeveloperWebhooksRouteWithChildren
   '/_app/organizations/members': typeof AppOrganizationsMembersRoute
   '/_app/organizations/tenants': typeof AppOrganizationsTenantsRoute
   '/_app/security/audit-logs': typeof AppSecurityAuditLogsRoute
@@ -573,10 +597,12 @@ export interface FileRoutesById {
   '/_app/security/sessions': typeof AppSecuritySessionsRoute
   '/_app/settings/billing': typeof AppSettingsBillingRoute
   '/_app/settings/branding': typeof AppSettingsBrandingRoute
+  '/_app/users/$userId': typeof AppUsersUserIdRoute
   '/_app/users/deleted': typeof AppUsersDeletedRoute
   '/_app/users/import': typeof AppUsersImportRoute
   '/_app/users/invitations': typeof AppUsersInvitationsRoute
   '/_app/users/sessions': typeof AppUsersSessionsRoute
+  '/_app/access/roles/$roleId': typeof AppAccessRolesRoleIdRoute
   '/_app/auth/api/keys': typeof AppAuthApiKeysRoute
   '/_app/auth/api/machine-identities': typeof AppAuthApiMachineIdentitiesRoute
   '/_app/auth/api/secrets': typeof AppAuthApiSecretsRoute
@@ -592,6 +618,7 @@ export interface FileRoutesById {
   '/_app/auth/mfa/recovery-codes': typeof AppAuthMfaRecoveryCodesRoute
   '/_app/auth/mfa/sms-email': typeof AppAuthMfaSmsEmailRoute
   '/_app/auth/mfa/totp': typeof AppAuthMfaTotpRoute
+  '/_app/developer/webhooks/$id': typeof AppDeveloperWebhooksIdRoute
   '/_app/security/compliance/gdpr': typeof AppSecurityComplianceGdprRoute
   '/_app/security/compliance/iso27001': typeof AppSecurityComplianceIso27001Route
   '/_app/security/compliance/retention': typeof AppSecurityComplianceRetentionRoute
@@ -639,10 +666,12 @@ export interface FileRouteTypes {
     | '/security/sessions'
     | '/settings/billing'
     | '/settings/branding'
+    | '/users/$userId'
     | '/users/deleted'
     | '/users/import'
     | '/users/invitations'
     | '/users/sessions'
+    | '/access/roles/$roleId'
     | '/auth/api/keys'
     | '/auth/api/machine-identities'
     | '/auth/api/secrets'
@@ -658,6 +687,7 @@ export interface FileRouteTypes {
     | '/auth/mfa/recovery-codes'
     | '/auth/mfa/sms-email'
     | '/auth/mfa/totp'
+    | '/developer/webhooks/$id'
     | '/security/compliance/gdpr'
     | '/security/compliance/iso27001'
     | '/security/compliance/retention'
@@ -703,10 +733,12 @@ export interface FileRouteTypes {
     | '/security/sessions'
     | '/settings/billing'
     | '/settings/branding'
+    | '/users/$userId'
     | '/users/deleted'
     | '/users/import'
     | '/users/invitations'
     | '/users/sessions'
+    | '/access/roles/$roleId'
     | '/auth/api/keys'
     | '/auth/api/machine-identities'
     | '/auth/api/secrets'
@@ -722,6 +754,7 @@ export interface FileRouteTypes {
     | '/auth/mfa/recovery-codes'
     | '/auth/mfa/sms-email'
     | '/auth/mfa/totp'
+    | '/developer/webhooks/$id'
     | '/security/compliance/gdpr'
     | '/security/compliance/iso27001'
     | '/security/compliance/retention'
@@ -769,10 +802,12 @@ export interface FileRouteTypes {
     | '/_app/security/sessions'
     | '/_app/settings/billing'
     | '/_app/settings/branding'
+    | '/_app/users/$userId'
     | '/_app/users/deleted'
     | '/_app/users/import'
     | '/_app/users/invitations'
     | '/_app/users/sessions'
+    | '/_app/access/roles/$roleId'
     | '/_app/auth/api/keys'
     | '/_app/auth/api/machine-identities'
     | '/_app/auth/api/secrets'
@@ -788,6 +823,7 @@ export interface FileRouteTypes {
     | '/_app/auth/mfa/recovery-codes'
     | '/_app/auth/mfa/sms-email'
     | '/_app/auth/mfa/totp'
+    | '/_app/developer/webhooks/$id'
     | '/_app/security/compliance/gdpr'
     | '/_app/security/compliance/iso27001'
     | '/_app/security/compliance/retention'
@@ -969,6 +1005,13 @@ declare module '@tanstack/react-router' {
       path: '/deleted'
       fullPath: '/users/deleted'
       preLoaderRoute: typeof AppUsersDeletedRouteImport
+      parentRoute: typeof AppUsersRoute
+    }
+    '/_app/users/$userId': {
+      id: '/_app/users/$userId'
+      path: '/$userId'
+      fullPath: '/users/$userId'
+      preLoaderRoute: typeof AppUsersUserIdRouteImport
       parentRoute: typeof AppUsersRoute
     }
     '/_app/settings/branding': {
@@ -1153,6 +1196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSecurityComplianceGdprRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/developer/webhooks/$id': {
+      id: '/_app/developer/webhooks/$id'
+      path: '/$id'
+      fullPath: '/developer/webhooks/$id'
+      preLoaderRoute: typeof AppDeveloperWebhooksIdRouteImport
+      parentRoute: typeof AppDeveloperWebhooksRoute
+    }
     '/_app/auth/mfa/totp': {
       id: '/_app/auth/mfa/totp'
       path: '/auth/mfa/totp'
@@ -1258,10 +1308,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAuthApiKeysRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/access/roles/$roleId': {
+      id: '/_app/access/roles/$roleId'
+      path: '/$roleId'
+      fullPath: '/access/roles/$roleId'
+      preLoaderRoute: typeof AppAccessRolesRoleIdRouteImport
+      parentRoute: typeof AppAccessRolesRoute
+    }
   }
 }
 
 interface AppUsersRouteChildren {
+  AppUsersUserIdRoute: typeof AppUsersUserIdRoute
   AppUsersDeletedRoute: typeof AppUsersDeletedRoute
   AppUsersImportRoute: typeof AppUsersImportRoute
   AppUsersInvitationsRoute: typeof AppUsersInvitationsRoute
@@ -1269,6 +1327,7 @@ interface AppUsersRouteChildren {
 }
 
 const AppUsersRouteChildren: AppUsersRouteChildren = {
+  AppUsersUserIdRoute: AppUsersUserIdRoute,
   AppUsersDeletedRoute: AppUsersDeletedRoute,
   AppUsersImportRoute: AppUsersImportRoute,
   AppUsersInvitationsRoute: AppUsersInvitationsRoute,
@@ -1278,6 +1337,29 @@ const AppUsersRouteChildren: AppUsersRouteChildren = {
 const AppUsersRouteWithChildren = AppUsersRoute._addFileChildren(
   AppUsersRouteChildren,
 )
+
+interface AppAccessRolesRouteChildren {
+  AppAccessRolesRoleIdRoute: typeof AppAccessRolesRoleIdRoute
+}
+
+const AppAccessRolesRouteChildren: AppAccessRolesRouteChildren = {
+  AppAccessRolesRoleIdRoute: AppAccessRolesRoleIdRoute,
+}
+
+const AppAccessRolesRouteWithChildren = AppAccessRolesRoute._addFileChildren(
+  AppAccessRolesRouteChildren,
+)
+
+interface AppDeveloperWebhooksRouteChildren {
+  AppDeveloperWebhooksIdRoute: typeof AppDeveloperWebhooksIdRoute
+}
+
+const AppDeveloperWebhooksRouteChildren: AppDeveloperWebhooksRouteChildren = {
+  AppDeveloperWebhooksIdRoute: AppDeveloperWebhooksIdRoute,
+}
+
+const AppDeveloperWebhooksRouteWithChildren =
+  AppDeveloperWebhooksRoute._addFileChildren(AppDeveloperWebhooksRouteChildren)
 
 interface AppRouteChildren {
   AppSplatRoute: typeof AppSplatRoute
@@ -1290,11 +1372,11 @@ interface AppRouteChildren {
   AppAccessPermissionsRoute: typeof AppAccessPermissionsRoute
   AppAccessPoliciesRoute: typeof AppAccessPoliciesRoute
   AppAccessResourcesRoute: typeof AppAccessResourcesRoute
-  AppAccessRolesRoute: typeof AppAccessRolesRoute
+  AppAccessRolesRoute: typeof AppAccessRolesRouteWithChildren
   AppAuthSocialRoute: typeof AppAuthSocialRoute
   AppDeveloperBotsRoute: typeof AppDeveloperBotsRoute
   AppDeveloperInfrastructureRoute: typeof AppDeveloperInfrastructureRoute
-  AppDeveloperWebhooksRoute: typeof AppDeveloperWebhooksRoute
+  AppDeveloperWebhooksRoute: typeof AppDeveloperWebhooksRouteWithChildren
   AppOrganizationsMembersRoute: typeof AppOrganizationsMembersRoute
   AppOrganizationsTenantsRoute: typeof AppOrganizationsTenantsRoute
   AppSecurityAuditLogsRoute: typeof AppSecurityAuditLogsRoute
@@ -1341,11 +1423,11 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccessPermissionsRoute: AppAccessPermissionsRoute,
   AppAccessPoliciesRoute: AppAccessPoliciesRoute,
   AppAccessResourcesRoute: AppAccessResourcesRoute,
-  AppAccessRolesRoute: AppAccessRolesRoute,
+  AppAccessRolesRoute: AppAccessRolesRouteWithChildren,
   AppAuthSocialRoute: AppAuthSocialRoute,
   AppDeveloperBotsRoute: AppDeveloperBotsRoute,
   AppDeveloperInfrastructureRoute: AppDeveloperInfrastructureRoute,
-  AppDeveloperWebhooksRoute: AppDeveloperWebhooksRoute,
+  AppDeveloperWebhooksRoute: AppDeveloperWebhooksRouteWithChildren,
   AppOrganizationsMembersRoute: AppOrganizationsMembersRoute,
   AppOrganizationsTenantsRoute: AppOrganizationsTenantsRoute,
   AppSecurityAuditLogsRoute: AppSecurityAuditLogsRoute,

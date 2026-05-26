@@ -29,7 +29,7 @@ import {
   TableRow,
   TimeSince,
 } from "@qeetid/ui";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2Icon, PlayIcon, PlusIcon, RefreshCwIcon, Trash2Icon, WebhookIcon } from "lucide-react";
 import { useState } from "react";
@@ -132,7 +132,15 @@ function WebhooksPage() {
               <TableBody>
                 {listQ.data.items.map((w) => (
                   <TableRow key={w.id}>
-                    <TableCell className="font-mono text-xs">{w.url}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      <Link
+                        to="/developer/webhooks/$id"
+                        params={{ id: w.id }}
+                        className="hover:underline"
+                      >
+                        {w.url}
+                      </Link>
+                    </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {w.events.slice(0, 3).map((e) => <Badge key={e} variant="muted">{e}</Badge>)}

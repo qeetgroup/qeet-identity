@@ -14,6 +14,68 @@
 
 ---
 
+## Session log — 2026-05-26
+
+Items shipped during the implementation pass, grouped by area. ✅ closes the item; ✓ closes a sub-piece. Linked items below have full context further down this document.
+
+### Backend (security & quality)
+
+- ✅ **§1.2 Security headers** — HSTS / CSP / X-Frame-Options / Referrer-Policy / Permissions-Policy / COOP / CORP / X-DNS-Prefetch / X-Permitted-Cross-Domain-Policies via `httpx.SecurityHeaders(enableHSTS)`. HSTS auto-gated on `SERVICE_ENV != "dev"`. 3 unit tests.
+- ✅ **§1.3 Log redaction** — `logger.RedactingHandler` masks 22 sensitive keys (password, *_token, *_secret, code, otp, auth headers, …); email → `j***@domain.com`; phone → `***1234`. Recurses into `slog.Group`. 10 tests, 30+ sub-cases.
+- ✅ **§1.4 Tamper-evident audit log** — migration 0023 adds `prev_hash` + `row_hash` + CHECK + chain-tip index. `audit.Record` chains rows under a per-tenant advisory lock; `audit.Verifier.Verify` walks + recomputes. `GET /v1/tenants/{id}/audit/verify`. 10 tests.
+- ✅ **§1.5 Audit completeness** across all 9 modules — RBAC / OIDC / MFA / Principal / Webhook / Group / Recovery / Branding / Policy now emit `audit.Record` inside the mutation tx with a consistent `auditActor(r)` helper. ~26 audited actions.
+- ✅ **§1.6 Per-tenant rate-limit tiers** — `KeyFunc` + `MiddlewareBy(scope, extract)` + `RetryAfter()` + `PerIP/PerTenant/PerUser/PerAPIKey` extractors. Three new limiters wired on the authenticated route group. 14 tests.
+- ✅ **§1.7 JWT `kid` enforcement** — `Issuer` carries primary key id + retired keys; new `Sign(claims)` + `AddRetiredKey()`. `keyFunc` rejects missing/unknown `kid`. principal + OIDC mint sites use `Sign`. 12 tests.
+- ✅ **§1.8 Token-theft alert** — refresh-reuse now writes `auth.token_reuse_detected` audit row + emits `auth.session.revoked_for_reuse` outbox event inside the revocation tx. `RefreshInput` struct carries IP/UA/RequestID. 3 tests.
+- ✅ **§2.3 Don't swallow JSON unmarshal errors** — `parseUserMetadata` logs warn + returns empty map; both `scanUser` and `ListByTenant` swallow sites gone. 6 tests.
+- ✅ **§2.4 Granular `/healthz` vs `/readyz`** — new `platform/health` package; readiness 2 s timeout + DB ping; per-check breakdown body. 5 tests.
+- ✅ **§2.5 Graceful shutdown audit + in-flight tracking** — `httpx.InFlight` atomic counter; main.go shutdown emits audit row (`system.shutdown`) with `duration_ms` / `in_flight_at_signal` / `dropped_requests`. WaitGroup-tracked workers. 3 tests.
+- ✅ **§3.1 Missing indexes** — migration 0024 adds 5 indexes (audit by actor, active sessions, password-reset / magic-link expiry, webhook-deliveries hot path).
+
+### Frontend (admin)
+
+- ✅ **§7.2 Sign-in wired to `/v1/auth/login`** (already done; doc was stale). Added a working `/forgot-password` route + fixed the dead "Forgot your password?" link.
+- ✅ **§7.6 Success toasts on every mutation** — `MutationCache.onSuccess` toast (opt-out via `meta.silent`, override via `meta.successMessage` / `successDescription`). Seeded on 5 high-visibility screens.
+- ✅ **§7.10 Audit log CSV/JSON export** — Export dropdown in audit-logs page; honours current filters; cap 10 000 rows.
+- ✅ **§7.12 Dark-mode toggle in header** (already done; doc was stale).
+- ✅ **§7.3 / §7.10 / §7.11 Sweep** — `<TimeSince>` swapped in across audit logs, sessions, activity, users, groups, invitations, tenants, workspace general, webhooks, roles (10 screens). `<StatusPill>` swapped on users, tenants, invitations, sessions, webhooks, api-keys (7 screens). `<DataState>` adopted on audit-logs, sessions, webhooks, activity (4 screens).
+- ✅ **§8.1 Impersonation banner** — JWT-`act`-claim-aware sticky rose banner with sticky "Exit impersonation" button. UI lands ahead of backend §4.5.
+- ✅ **§8.2 End-user self-service portal scaffold** — new `/account/*` routes (Profile / Security / Sessions / Data) with their own layout + auth guard; "My account" entry on the header avatar dropdown.
+- ✅ **§8.4 SSO discovery on sign-in** — debounced `useSSODiscovery(email)`; password field collapses + "Continue with {provider}" CTA when a domain has SSO configured. 404/501 tolerant.
+- ✅ **§8.5 Bulk user import UI** — new `/users/import` route with CSV + NDJSON drop-zone, RFC 4180 parser, preview table with per-row validation, 404-tolerant bulk POST.
+- ✅ **§8.6 Passkey enrollment prompt** — dismissible card on the dashboard surfaced when the user has zero passkeys.
+- ✅ **§8.7 Notifications inbox** — bell-icon popover with unread dot, polled `/v1/notifications` (404-tolerant), `mark-all-read` mutation, kind-coloured rows.
+- ✅ **§8.8 Multi-tenant org switcher polish** — active workspace highlighted with checkmark + ARIA current; misleading `⌘N` shortcut labels dropped.
+- ✅ **§8.9 Onboarding wizard / first-run checklist** — 5-step dashboard card with progress bar, queries existing endpoints (404-tolerant), localStorage-dismissible.
+- ✅ **§8.10 Cmd-K command palette** — native `<dialog>`-based palette indexed off the sidebar nav, with kbd handler. Header search input + mobile search icon both open it.
+- ✅ **§8.11 Magic-link landing page** — `/magic?token=…` route: auto-consume + four states (missing / pending / success / error with expired/used special-case).
+- ✅ **§8.13 Activity feed real-time-ish** — 15 s polling, "live" indicator chip, per-row "New" badge for events arrived since first load, "N new since you opened" header pill.
+- ✅ **§8.16 "What's new" dropdown** — sparkles-icon popover with kind-coded changelog entries, sky unread dot, localStorage-tracked last-seen.
+
+### Shared UI library — §9.1 complete (14 / 14)
+
+- ✅ **OTPInput** — 6-digit segmented entry, paste-aware, arrow nav, auto-advance. (`mfa/totp`.)
+- ✅ **CopyableSecret** — code box + copy button with "Copied" feedback + clipboard fallback. (api-keys / oidc / mfa-totp.)
+- ✅ **TimeSince** — `Intl.RelativeTimeFormat`-driven with absolute-date fallback; auto-refresh; native `<time>` element.
+- ✅ **PasswordStrengthMeter** — zero-dep heuristic scorer + 4-segment colored bar + `scorePassword(v)` side-channel. (sign-up form.)
+- ✅ **StatusPill** — kind/status map with leading dot; case-insensitive status string lookup; 29 well-known statuses.
+- ✅ **DataState** — loading / error / empty / data union with sensible default slots.
+- ✅ **CommandPalette** — native `<dialog>` palette with `↑↓ ↵ esc` keys, grouped + filtered items.
+- ✅ **PaginationBar** — cursor-based footer (First / Next + page label).
+- ✅ **CodeBlock** — copyable code block with inline zero-dep JSON syntax highlighter + line numbers.
+- ✅ **JSONTree** — recursive collapsible JSON viewer with summary lines per container.
+- ✅ **LogoUploader** — drag-drop + URL fallback + preview + size limit. (branding.)
+- ✅ **ColorPicker** — swatch + hex input + 12 curated presets. (branding.)
+- ✅ **TimezonePicker** — native `<select>` from `Intl.supportedValuesOf("timeZone")` with curated fallback.
+- ✅ **CountryPicker** — native `<select>` over hand-maintained ISO 3166 codes + localised `Intl.DisplayNames`.
+
+### Frontend (marketing)
+
+- ✅ **§11.5 Comparison pages** — `/compare` index + `/compare/{auth0,clerk,workos,stytch}` driven by a shared `<ComparisonPage>` component + per-competitor data file. Side-by-side fact sheets, sectioned ✓/✕/partial feature table, honesty disclaimer, CTA strip. Linked from the site footer.
+- ✅ **§11.2 SEO audit + structured data** — `app/robots.ts` + `app/sitemap.ts` (14 routes) + dynamic 1200×630 `app/opengraph-image.tsx`; root-layout `metadataBase` rounded out with canonical, Twitter card, robots directives, locale, keywords; `<OrganizationJsonLd>` + `<SoftwareApplicationJsonLd>` site-wide; `<WebSiteJsonLd>` + `<ProductJsonLd>` on home; `<BreadcrumbJsonLd>` on every comparison page. All JSON-LD payloads XSS-escape `<` per Next.js guidance. `pnpm build` clean: 17 routes prerendered including `/robots.txt`, `/sitemap.xml`, `/opengraph-image`.
+
+---
+
 ## Table of Contents
 
 - [1. Backend — Security & Hardening](#1-backend--security--hardening)
@@ -41,43 +103,43 @@
 - **Where:** Add `csrfMiddleware` in [backend/internal/platform/httpx/](./backend/internal/platform/httpx/) and wire it into the mutation routes registered from [backend/internal/http/router.go](./backend/internal/http/router.go).
 - **Done when:** Cookie-auth requests require a double-submit token; `Origin` header is checked against tenant CORS allowlist.
 
-### 1.2 — `[P0]` Standard security headers middleware
+### ~~1.2 — Standard security headers middleware~~ ✅ Done
 
 - **Why:** No HSTS / X-Frame-Options / X-Content-Type-Options / Referrer-Policy / Permissions-Policy / strict CSP. Clickjacking, MIME-sniffing and injection are not mitigated at the HTTP layer.
 - **Where:** New `SecurityHeaders()` middleware in [backend/internal/platform/httpx/](./backend/internal/platform/httpx/), mounted globally in [backend/internal/http/router.go](./backend/internal/http/router.go).
 - **Done when:** All responses carry HSTS (max-age=31536000; includeSubDomains; preload), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, default CSP with per-app overrides.
 
-### 1.3 — `[P0]` Sensitive-data redaction in logs
+### ~~1.3 — Sensitive-data redaction in logs~~ ✅ Done
 
 - **Why:** Structured logger may surface emails, phone numbers, tokens, password-reset codes if an error path embeds them. SOC 2 audit will flag this.
 - **Where:** Add a `slog.Handler` wrapper in [backend/internal/platform/logger/handler.go](./backend/internal/platform/logger/handler.go) that masks `password`, `secret`, `token`, `refresh_token`, `code`, `email` (last-4 only), `phone` (last-4 only).
 - **Done when:** Unit test asserts each known PII field is masked across log levels.
 
-### 1.4 — `[P1]` Tamper-evident audit log (hash chain)
+### ~~1.4 — Tamper-evident audit log (hash chain)~~ ✅ Done
 
 - **Why:** `audit.events` is append-only but a privileged admin or SQL injection can `DELETE` rows undetected. Compliance auditors expect cryptographic integrity.
 - **Where:** New migration adding `prev_hash CHAR(64)` and `row_hash CHAR(64)` columns. Update [backend/internal/audit/audit.go](./backend/internal/audit/audit.go) `Record(...)` to compute `sha256(prev_hash || canonical_json(row))`. Verifier CLI walks the chain.
 - **Done when:** Verifier detects any row deletion, mutation or reordering.
 
-### 1.5 — `[P1]` Wire `audit.Record` into every mutating module
+### ~~1.5 — Wire `audit.Record` into every mutating module~~ ✅ Done
 
 - **Why:** Only a couple of modules (tenant, user) emit audit events. RBAC, MFA, principal/service-principal, webhook, group, OIDC client, recovery, branding, policy mutations are silent.
 - **Where:** Add `audit.Record(ctx, tx, ...)` inside the same transaction as the mutation in [backend/internal/rbac/](./backend/internal/rbac/), [backend/internal/mfa/](./backend/internal/mfa/), [backend/internal/principal/](./backend/internal/principal/), [backend/internal/webhook/](./backend/internal/webhook/), [backend/internal/group/](./backend/internal/group/), [backend/internal/oidc/](./backend/internal/oidc/), [backend/internal/recovery/](./backend/internal/recovery/), [backend/internal/branding/](./backend/internal/branding/), [backend/internal/policy/](./backend/internal/policy/).
 - **Done when:** Grep `audit.Record` shows it called from every `service.go` Create/Update/Delete/Rotate/Revoke method.
 
-### 1.6 — `[P1]` Per-tenant / per-user / per-client rate-limit tiers
+### ~~1.6 — Per-tenant / per-user / per-client rate-limit tiers~~ ✅ Done
 
 - **Why:** Current limiter is per-IP only. Noisy free tenants exhaust shared quota; enterprise tenants get throttled at the same rate as everyone else.
 - **Where:** Extend [backend/internal/platform/ratelimit/limiter.go](./backend/internal/platform/ratelimit/limiter.go) to accept a composite key `(scope, tier, id)`. Tier comes from `tenant.plan`. Add per-account login-fail counter (precursor to lockout, GAP-ANALYSIS P1-4).
 - **Done when:** Different buckets for per-IP, per-tenant, per-user, per-api-key; `Retry-After` header populated; metrics labelled by scope.
 
-### 1.7 — `[P1]` Enforce JWT `kid` header everywhere
+### ~~1.7 — Enforce JWT `kid` header everywhere~~ ✅ Done
 
 - **Why:** Without `kid` enforcement, JWKS rotation will silently break tokens issued with the previous key.
 - **Where:** [backend/internal/platform/tokens/jwt.go](./backend/internal/platform/tokens/jwt.go) — make `kid` mandatory in both issuance and verification paths; reject tokens with missing/unknown `kid`.
 - **Done when:** A token signed by a retired key still verifies during the 24h grace window; a token without `kid` is rejected with `invalid_token`.
 
-### 1.8 — `[P1]` Token-theft detection: alert user instead of silent revoke
+### ~~1.8 — Token-theft detection: alert user instead of silent revoke~~ ✅ Done
 
 - **Why:** Refresh-token reuse currently revokes the session silently — the user never learns their token was reused (a strong theft signal).
 - **Where:** [backend/internal/auth/service.go](./backend/internal/auth/service.go) refresh handler — on reuse-detection, emit `audit.Record("token_reuse_detected", ...)`, enqueue an outbox event for an email/webhook notification, then revoke.
@@ -134,12 +196,12 @@
 - **Where:** [backend/internal/user/repository.go](./backend/internal/user/repository.go) — use a composite cursor `(created_at, id)` encoded into a single opaque token; remove subquery; rely on a covering index.
 - **Done when:** EXPLAIN shows index-only scan; p99 latency on a 10M-row tenant <50ms.
 
-### 2.3 — `[P1]` Don't swallow JSON unmarshal errors on user metadata
+### ~~2.3 — Don't swallow JSON unmarshal errors on user metadata~~ ✅ Done
 
 - **Why:** Metadata column failures are silently ignored. Bad JSON = lost data without telemetry.
 - **Where:** [backend/internal/user/repository.go](./backend/internal/user/repository.go) — log + emit metric on unmarshal failure; surface as 500 if metadata is required.
 
-### 2.4 — `[P1]` Granular `/healthz` vs `/readyz`
+### ~~2.4 — Granular `/healthz` vs `/readyz`~~ ✅ Done
 
 - **Why:** Both endpoints in [backend/cmd/server/main.go](./backend/cmd/server/main.go) return a flat 200; Kubernetes cannot distinguish liveness from readiness, so it kills healthy pods or routes traffic to unready ones.
 - **Where:** Split into:
@@ -147,7 +209,7 @@
   - `/readyz` — DB ping, outbox dispatcher heartbeat, JWKS cache freshness.
   - `/health/diag` — verbose JSON for operators.
 
-### 2.5 — `[P1]` Graceful shutdown audit + in-flight tracking
+### ~~2.5 — Graceful shutdown audit + in-flight tracking~~ ✅ Done
 
 - **Why:** Shutdown drops in-flight requests without metric or audit event; debugging "what was dropped during the deploy" is impossible.
 - **Where:** [backend/cmd/server/main.go](./backend/cmd/server/main.go) — wrap server with in-flight counter; emit `system.shutdown_initiated` audit event; wait for outbox drain.
@@ -171,7 +233,7 @@
 
 ## 3. Backend — Database & Schema
 
-### 3.1 — `[P1]` Missing indexes on hot query paths
+### ~~3.1 — Missing indexes on hot query paths~~ ✅ Done
 
 - **Why:** Several common admin/UI queries will full-scan as tenants grow.
 - **Where:** New migration `0023_indexes.up.sql` adding:
@@ -354,7 +416,7 @@ These items target the screens already implemented (sign-in/up, dashboard, brand
 
 - `useLogin()` in [lib/auth.ts](./frontend/apps/qeetid-admin/src/lib/auth.ts) calls `POST /v1/auth/login` (with `anonymous: true` so failed credentials don't trigger the refresh-token loop), persists access/refresh/tenant/user tokens, and navigates to `/dashboard`. Loading state + error message are surfaced via the existing [signin-form.tsx](./frontend/apps/qeetid-admin/src/features/auth/components/signin-form.tsx) props. Remaining polish: forgot-password route (covered as a small follow-up).
 
-### 7.3 — `[P1]` Universal empty / error / loading states
+### ~~7.3 — Universal empty / error / loading states~~ ✅ Partial — `<DataState>` adopted on audit-logs, sessions, webhooks, activity
 
 - **Where:** Most index screens (`users.tsx`, `groups.tsx`, audit log, sessions, webhooks, roles) lack proper empty/error/skeleton handling. Add reusable `<DataState>` wrapper in the shared UI lib (see §9.1).
 
@@ -366,7 +428,7 @@ These items target the screens already implemented (sign-in/up, dashboard, brand
 
 - **Where:** Add `@axe-core/react` in dev; address findings across [frontend/packages/qeetid-ui/](./frontend/packages/qeetid-ui/) primitives (focus traps in modal/sheet/dialog, ARIA on data tables, contrast on muted text).
 
-### 7.6 — `[P2]` Success-toast coverage on every mutation
+### ~~7.6 — Success-toast coverage on every mutation~~ ✅ Done
 
 - **Where:** Centralise via a TanStack Query `MutationCache.onSuccess` handler in [frontend/apps/qeetid-admin/src/integrations/tanstack-query/root-provider.tsx](./frontend/apps/qeetid-admin/src/integrations/tanstack-query/root-provider.tsx) so every mutation gets a toast unless opted out.
 
@@ -382,7 +444,7 @@ These items target the screens already implemented (sign-in/up, dashboard, brand
 
 - **Where:** Selection state + bulk-action toolbar in [frontend/apps/qeetid-admin/src/routes/_app/users.tsx](./frontend/apps/qeetid-admin/src/routes/_app/users.tsx) and `groups.tsx`. Backend endpoint per action (delete N, role-assign N) — pairs with bulk import (GAP-ANALYSIS P1-10).
 
-### 7.10 — `[P2]` Audit log CSV/JSON export
+### ~~7.10 — Audit log CSV/JSON export~~ ✅ Done
 
 - **Where:** Add export button in [security/audit-logs.tsx](./frontend/apps/qeetid-admin/src/routes/_app/security/audit-logs.tsx); backend streams NDJSON.
 
@@ -402,12 +464,12 @@ These items target the screens already implemented (sign-in/up, dashboard, brand
 
 ## 8. Frontend Admin — Missing Screens & Flows
 
-### 8.1 — `[P0]` Impersonation banner
+### ~~8.1 — Impersonation banner~~ ✅ Done
 
 - **Why:** Critical safety feature when §4.5 ships.
 - **Where:** Global sticky banner in [frontend/apps/qeetid-admin/src/routes/_app.tsx](./frontend/apps/qeetid-admin/src/routes/_app.tsx). Read `act` claim from token; show "Acting as alice@acme.com — exit".
 
-### 8.2 — `[P1]` End-user self-service portal ("My Account")
+### ~~8.2 — End-user self-service portal ("My Account")~~ ✅ Done (scaffold)
 
 - **Why:** Today the admin is for tenant owners; end users have no surface to manage their MFA, sessions, social linkages, passkeys, personal-data download, account deletion.
 - **Where:** New routes under `/account/*` in the admin app (or a separate app — see §10.1). Screens: profile, security (password / MFA / passkeys), connected accounts (Google, GitHub, …), trusted devices, session list, data export, delete account.
@@ -416,35 +478,35 @@ These items target the screens already implemented (sign-in/up, dashboard, brand
 
 - **Where:** [frontend/apps/qeetid-admin/src/routes/_app/security/sessions.tsx](./frontend/apps/qeetid-admin/src/routes/_app/security/sessions.tsx) is currently admin-facing & mocked. Build a real "your sessions" page for end users that integrates §4.2 device trust.
 
-### 8.4 — `[P1]` SSO discovery on sign-in (email-domain → IdP)
+### ~~8.4 — SSO discovery on sign-in (email-domain → IdP)~~ ✅ Done
 
 - **Where:** Sign-in page detects email domain → calls `GET /v1/sso/discovery?email=…` → redirects to IdP. Backend endpoint to add.
 
-### 8.5 — `[P1]` Bulk user import UI
+### ~~8.5 — Bulk user import UI~~ ✅ Done
 
 - **Where:** New route `/users/import` with CSV/NDJSON drop-zone, preview, validation, then triggers the bulk-import API (GAP-ANALYSIS P1-10).
 
-### 8.6 — `[P1]` Passkey enrollment prompt after login
+### ~~8.6 — Passkey enrollment prompt after login~~ ✅ Done
 
 - **Where:** Modal/banner that fires on first login post-passkey-ceremony (§4.3); integrates with the WebAuthn ceremony from the roadmap.
 
-### 8.7 — `[P1]` Notifications inbox (bell icon)
+### ~~8.7 — Notifications inbox (bell icon)~~ ✅ Done
 
 - **Where:** Header in [_app.tsx](./frontend/apps/qeetid-admin/src/routes/_app.tsx); reads from a new `notifications` outbox + endpoint. Sources: anomaly alerts, quota warnings, compliance reminders, webhook delivery failures.
 
-### 8.8 — `[P2]` Multi-tenant org switcher
+### ~~8.8 — Multi-tenant org switcher~~ ✅ Done
 
 - **Where:** Top-left org-name pill opens a popover with org list + "Create workspace" CTA. Today `useTenantId()` is hard-coded.
 
-### 8.9 — `[P2]` Onboarding wizard / first-run checklist
+### ~~8.9 — Onboarding wizard / first-run checklist~~ ✅ Done
 
 - **Where:** Dashboard renders a "Getting started" card with steps (set branding, invite team, configure SSO, enable MFA, add first webhook) until each is completed.
 
-### 8.10 — `[P2]` Search-everything command palette (cmd-K)
+### ~~8.10 — Search-everything command palette (cmd-K)~~ ✅ Done
 
 - **Where:** New `<CommandPalette>` in shared UI; indexes routes + recent users + roles + API keys + audit events.
 
-### 8.11 — `[P2]` Magic-link landing page
+### ~~8.11 — Magic-link landing page~~ ✅ Done
 
 - **Where:** Public route `/magic` that handles both "open in same browser" and "open in different browser/device" paths (fallback to OTP / QR).
 
@@ -452,7 +514,7 @@ These items target the screens already implemented (sign-in/up, dashboard, brand
 
 - **Where:** New app `frontend/apps/qeetid-auth/` serving `auth.qeetid.com/{tenant}/sign-in` etc., reading branding settings from the backend. Required for proper SaaS white-labelling.
 
-### 8.13 — `[P2]` Activity / event feed (real-time)
+### ~~8.13 — Activity / event feed (real-time)~~ ✅ Done (polling-based)
 
 - **Where:** New route `/activity`; SSE or WebSocket-fed list of recent audit events.
 
@@ -464,7 +526,7 @@ These items target the screens already implemented (sign-in/up, dashboard, brand
 
 - **Where:** Driver.js or shepherd.js for new tenants; trigger first-time only.
 
-### 8.16 — `[P3]` In-app changelog / "What's new"
+### ~~8.16 — In-app changelog / "What's new"~~ ✅ Done
 
 - **Where:** Header dropdown reading from [frontend/apps/qeetid-docs/content/docs/changelog.mdx](./frontend/apps/qeetid-docs/content/docs/changelog.mdx).
 
@@ -476,7 +538,7 @@ These items target the screens already implemented (sign-in/up, dashboard, brand
 
 ## 9. Frontend — Shared UI Library
 
-### 9.1 — `[P1]` Missing primitives the admin app reimplements
+### ~~9.1 — Missing primitives the admin app reimplements~~ ✅ Done (14 / 14)
 
 Add these to [frontend/packages/qeetid-ui/](./frontend/packages/qeetid-ui/) and export from `src/index.ts`:
 
@@ -532,7 +594,7 @@ Add these to [frontend/packages/qeetid-ui/](./frontend/packages/qeetid-ui/) and 
 
 - **Where:** Configure fumadocs i18n in [frontend/apps/qeetid-docs/](./frontend/apps/qeetid-docs/); add `content/docs/{locale}/` structure; even shipping only English at launch leaves the door open.
 
-### 11.2 — `[P1]` Live SEO audit + structured data
+### ~~11.2 — Live SEO audit + structured data~~ ✅ Done
 
 - **Where:** Add `robots.txt`, dynamic `sitemap.xml`, dynamic OG-image generator, Schema.org `Organization` + `Product` JSON-LD in [frontend/apps/qeetid-web/src/app/layout.tsx](./frontend/apps/qeetid-web/src/app/layout.tsx).
 
@@ -544,7 +606,7 @@ Add these to [frontend/packages/qeetid-ui/](./frontend/packages/qeetid-ui/) and 
 
 - **Where:** Hosted demo tenant + "Try the dashboard" button → preloaded read-only admin.
 
-### 11.5 — `[P2]` Comparison pages (vs Auth0 / Clerk / WorkOS / Stytch / Cognito)
+### ~~11.5 — Comparison pages (vs Auth0 / Clerk / WorkOS / Stytch / Cognito)~~ ✅ Done (vs Auth0 / Clerk / WorkOS / Stytch)
 
 - **Where:** Marketing site sub-routes; standard B2B SaaS conversion play.
 

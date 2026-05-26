@@ -261,7 +261,13 @@ function UsersPage() {
                         />
                       </TableCell>
                       <TableCell className="font-medium">
-                        {u.email}
+                        <Link
+                          to="/users/$userId"
+                          params={{ userId: u.id }}
+                          className="hover:underline"
+                        >
+                          {u.email}
+                        </Link>
                         {isSelf && (
                           <Badge variant="muted" className="ml-2">
                             You
