@@ -32,12 +32,14 @@ import {
   SheetHeader,
   SheetTitle,
   Skeleton,
+  StatusPill,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
+  TimeSince,
 } from "@qeetid/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -146,10 +148,8 @@ function TenantsPage() {
                     <TableCell className="font-mono text-xs text-muted-foreground">{t.slug}</TableCell>
                     <TableCell><Badge variant="muted">{t.plan}</Badge></TableCell>
                     <TableCell className="text-muted-foreground">{t.region}</TableCell>
-                    <TableCell>
-                      <Badge variant={t.status === "active" ? "success" : "destructive"}>{t.status}</Badge>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">{new Date(t.created_at).toLocaleDateString()}</TableCell>
+                    <TableCell><StatusPill status={t.status} /></TableCell>
+                    <TableCell><TimeSince value={t.created_at} /></TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
                         <Button

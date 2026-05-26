@@ -3,6 +3,23 @@ import { toast } from "sonner";
 
 import { ApiError } from "@/lib/api";
 
+// Per-mutation overrides go on the `meta` object. `silent: true` opts out
+// of both the success toast and the error toast (e.g. background polls
+// where a toast would be noisy). `successMessage` overrides the default
+// "Saved" string; `successDescription` adds a second line.
+interface MutationMeta {
+  silent?: boolean;
+  successMessage?: string;
+  successDescription?: string;
+}
+
+declare module "@tanstack/react-query" {
+  interface Register {
+    mutationMeta: MutationMeta;
+    queryMeta: { silent?: boolean };
+  }
+}
+
 // Surface backend errors via a single toast handler. 401 is excluded because
 // api.ts already redirects to /sign-in after a failed refresh, and 400/422
 // is excluded so form validation can render inline messages without a
@@ -15,6 +32,17 @@ function reportError(error: unknown, meta?: Record<string, unknown>) {
   toast.error(error.message);
 }
 
+// Success-side toast: emitted for every mutation that doesn't opt out.
+// Default message is intentionally generic ("Saved"); screens that want
+// a better word ("Created user", "Revoked session") set
+// `meta: { successMessage: "..." }` on the useMutation call.
+function reportSuccess(meta?: MutationMeta) {
+  if (meta?.silent) return;
+  toast.success(meta?.successMessage ?? "Saved", {
+    description: meta?.successDescription,
+  });
+}
+
 export function getContext() {
   const queryClient = new QueryClient({
     queryCache: new QueryCache({
@@ -22,6 +50,7 @@ export function getContext() {
     }),
     mutationCache: new MutationCache({
       onError: (error, _vars, _ctx, mutation) => reportError(error, mutation.meta),
+      onSuccess: (_data, _vars, _ctx, mutation) => reportSuccess(mutation.meta as MutationMeta | undefined),
     }),
   });
 

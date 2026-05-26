@@ -32,14 +32,17 @@ import {
   SheetHeader,
   SheetTitle,
   Skeleton,
+  StatusPill,
+  buttonVariants,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
+  TimeSince,
 } from "@qeetid/ui";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   KeyRoundIcon,
@@ -48,6 +51,7 @@ import {
   PlusIcon,
   RefreshCwIcon,
   Trash2Icon,
+  UploadCloudIcon,
   UserIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -71,19 +75,6 @@ type User = {
 
 type UsersResponse = { items: User[]; next_cursor?: string };
 
-function statusVariant(s: User["status"]) {
-  switch (s) {
-    case "active":
-      return "success" as const;
-    case "invited":
-      return "warning" as const;
-    case "suspended":
-      return "destructive" as const;
-    default:
-      return "muted" as const;
-  }
-}
-
 function UsersPage() {
   const tenantId = useTenantId();
   const currentUserId = tokenStore.getUserId();
@@ -105,6 +96,7 @@ function UsersPage() {
       setConfirmingDelete(null);
       qc.invalidateQueries({ queryKey: ["users"] });
     },
+    meta: { successMessage: "User deleted" },
   });
 
   return (
@@ -122,6 +114,12 @@ function UsersPage() {
               <RefreshCwIcon className={usersQ.isFetching ? "animate-spin" : ""} />
               Refresh
             </Button>
+            <Link
+              to="/users/import"
+              className={buttonVariants({ variant: "outline", size: "sm" })}
+            >
+              <UploadCloudIcon /> Import
+            </Link>
             <Button size="sm" onClick={() => setCreating(true)}>
               <PlusIcon /> New user
             </Button>
@@ -180,15 +178,17 @@ function UsersPage() {
                         {u.display_name ?? "—"}
                       </TableCell>
                       <TableCell>
-                        <Badge variant={statusVariant(u.status)}>{u.status}</Badge>
+                        <StatusPill status={u.status} />
                       </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {u.email_verified_at
-                          ? new Date(u.email_verified_at).toLocaleDateString()
-                          : "—"}
+                      <TableCell>
+                        {u.email_verified_at ? (
+                          <TimeSince value={u.email_verified_at} />
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
                       </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {new Date(u.created_at).toLocaleDateString()}
+                      <TableCell>
+                        <TimeSince value={u.created_at} />
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
@@ -324,6 +324,7 @@ function CreateUserSheet({ open, onOpenChange, tenantId, onCreated }: CreateUser
       onCreated();
       onOpenChange(false);
     },
+    meta: { successMessage: "User created" },
   });
 
   return (
@@ -427,6 +428,7 @@ function EditUserSheet({ user, isSelf, onOpenChange, onSaved }: EditUserSheetPro
     mutationFn: (body: UpdateBody) =>
       api<User>(`/v1/users/${user!.id}`, { method: "PATCH", body }),
     onSuccess: onSaved,
+    meta: { successMessage: "User updated" },
   });
 
   return (
@@ -536,6 +538,7 @@ function SetPasswordSheet({ user, onOpenChange, onSaved }: SetPasswordSheetProps
     mutationFn: (body: { password: string }) =>
       api<void>(`/v1/users/${user!.id}/password`, { method: "POST", body }),
     onSuccess: onSaved,
+    meta: { successMessage: "Password updated" },
   });
 
   return (

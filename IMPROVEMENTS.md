@@ -350,9 +350,9 @@ These items target the screens already implemented (sign-in/up, dashboard, brand
 - **Where:** [frontend/apps/qeetid-admin/src/routes/_app/dashboard.tsx](./frontend/apps/qeetid-admin/src/routes/_app/dashboard.tsx) — replace fixture data with the analytics endpoints (depends on §4.8).
 - **Done when:** Login chart, MFA adoption, failed-logins all read live data.
 
-### 7.2 — `[P1]` Wire admin sign-in to `/v1/auth/login`
+### 7.2 — ~~Wire admin sign-in to `/v1/auth/login`~~ ✅ Already done
 
-- **Where:** [frontend/apps/qeetid-admin/src/routes/_auth/sign-in.tsx](./frontend/apps/qeetid-admin/src/routes/_auth/sign-in.tsx) — currently uses TanStack Form locally without hitting the backend.
+- `useLogin()` in [lib/auth.ts](./frontend/apps/qeetid-admin/src/lib/auth.ts) calls `POST /v1/auth/login` (with `anonymous: true` so failed credentials don't trigger the refresh-token loop), persists access/refresh/tenant/user tokens, and navigates to `/dashboard`. Loading state + error message are surfaced via the existing [signin-form.tsx](./frontend/apps/qeetid-admin/src/features/auth/components/signin-form.tsx) props. Remaining polish: forgot-password route (covered as a small follow-up).
 
 ### 7.3 — `[P1]` Universal empty / error / loading states
 
@@ -390,9 +390,9 @@ These items target the screens already implemented (sign-in/up, dashboard, brand
 
 - **Where:** Use TanStack Query `onMutate` for delete-row / toggle-active actions across users, webhooks, API keys, roles.
 
-### 7.12 — `[P3]` Surface dark-mode toggle in the header
+### 7.12 — ~~Surface dark-mode toggle in the header~~ ✅ Already done
 
-- **Where:** [frontend/apps/qeetid-admin/src/features/dashboard/components/theme-toggle.tsx](./frontend/apps/qeetid-admin/src/features/dashboard/components/theme-toggle.tsx) exists but is not in the visible header.
+- Toggle is wired into [frontend/apps/qeetid-admin/src/routes/_app.tsx:70](./frontend/apps/qeetid-admin/src/routes/_app.tsx#L70). `ThemeProvider` is mounted at root with an inline no-flash bootstrap script ([__root.tsx:19](./frontend/apps/qeetid-admin/src/routes/__root.tsx#L19)).
 
 ### 7.13 — `[P3]` Mobile / responsive pass
 
