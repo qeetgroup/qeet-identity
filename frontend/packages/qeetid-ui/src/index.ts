@@ -6,6 +6,17 @@ export {
   AvatarGroupCount,
   AvatarImage,
 } from "./components/ui/avatar"
+export {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./components/ui/alert-dialog"
 export { Badge, badgeVariants } from "./components/ui/badge"
 export {
   Table,
