@@ -66,6 +66,16 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Safety guard: CSRF_DISABLED is a dev convenience for Postman/curl
+	// testing — it must never be honoured outside SERVICE_ENV=dev. Failing
+	// loudly here is cheaper than discovering a production deploy has CSRF
+	// off because someone copied a .env file.
+	if cfg.CSRFDisabled && cfg.ServiceEnv != "dev" {
+		slog.Error("CSRF_DISABLED is only permitted when SERVICE_ENV=dev — refusing to start",
+			"service_env", cfg.ServiceEnv)
+		os.Exit(1)
+	}
+
 	level := parseLogLevel(cfg.LogLevel)
 	var handler slog.Handler
 	if cfg.ServiceEnv != "prod" && isatty.IsTerminal(os.Stdout.Fd()) {
@@ -156,6 +166,11 @@ func main() {
 		ServiceName:    cfg.ServiceName,
 		ServiceEnv:     cfg.ServiceEnv,
 		StartedAt:      startedAt,
+		CSRFDisabled:   cfg.CSRFDisabled,
+	}
+
+	if cfg.CSRFDisabled {
+		slog.Warn("CSRF protection is DISABLED (dev only) — set CSRF_DISABLED=false to re-enable")
 	}
 
 	router := httpapi.NewRouter(deps)

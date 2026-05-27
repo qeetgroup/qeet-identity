@@ -65,6 +65,7 @@ type Deps struct {
 	ServiceName    string
 	ServiceEnv     string
 	StartedAt      time.Time
+	CSRFDisabled   bool
 }
 
 func NewRouter(d Deps) http.Handler {
@@ -81,10 +82,15 @@ func NewRouter(d Deps) http.Handler {
 	// groups so every mutation route inherits the check, including the
 	// public auth/recovery/invite endpoints which are the most CSRF-
 	// sensitive (they create sessions).
-	r.Use(httpx.CSRF(httpx.CSRFConfig{
-		AllowedOrigins: d.AllowedOrigins,
-		CookieSecure:   d.ServiceEnv != "dev",
-	}))
+	//
+	// CSRFDisabled is an explicit escape hatch for dev/Postman testing only
+	// — main.go refuses to start with CSRF_DISABLED outside SERVICE_ENV=dev.
+	if !d.CSRFDisabled {
+		r.Use(httpx.CSRF(httpx.CSRFConfig{
+			AllowedOrigins: d.AllowedOrigins,
+			CookieSecure:   d.ServiceEnv != "dev",
+		}))
+	}
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   d.AllowedOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
