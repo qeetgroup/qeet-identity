@@ -1,4 +1,4 @@
-# QEETID — Sprint Plan (Differentiators + E2E Test Coverage)
+# Qeet ID — Sprint Plan (Differentiators + E2E Test Coverage)
 
 > **What this folder is.** A sprint-by-sprint execution plan with two jobs in every sprint:
 > 1. **Test what exists** — concrete, copy-paste end-to-end test scenarios for already-built features, so you (the maintainer) can verify the platform actually works before building on top of it.
@@ -48,7 +48,7 @@ Most platforms solve *authentication*. We aim to solve the **operational pain ar
 5. **Migrating off a vendor means forcing password resets** → **Zero-Downtime Universal Importer** (D9).
 6. **AI agents are abusing human credentials** → **First-class Agent Identity & Delegation** (D7).
 7. **Support staff impersonate users with no guardrails; breaches can't be contained fast** → **Safe Impersonation + Tenant Kill-Switch** (D8).
-8. **"SSO tax"** — enterprise SSO/SCIM gated behind $$$ tiers → **QEETID includes them**. Enterprise readiness is not a luxury add-on.
+8. **"SSO tax"** — enterprise SSO/SCIM gated behind $$$ tiers → **Qeet ID includes them**. Enterprise readiness is not a luxury add-on.
 
 ### Differentiator catalog
 

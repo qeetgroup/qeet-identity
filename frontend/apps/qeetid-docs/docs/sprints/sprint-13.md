@@ -18,7 +18,7 @@
 
 ### 🧪 SCENARIO 13.1 — SCIM provisioning (create/update)
 - **Steps:** from the directory, assign a user → SCIM `POST /scim/v2/Users`; update attributes → `PATCH`/`PUT`.
-- **Expect:** user created/updated in the right tenant; mapped to QEETID schema; idempotent on retries.
+- **Expect:** user created/updated in the right tenant; mapped to Qeet ID schema; idempotent on retries.
 - **Pass:** [ ] create provisions user [ ] PATCH updates (active=false → suspend) [ ] duplicate create is idempotent [ ] schema/Service Provider Config endpoints respond.
 
 ### 🧪 SCENARIO 13.2 — Deprovisioning (the critical one)
@@ -28,7 +28,7 @@
 
 ### 🧪 SCENARIO 13.3 — Group sync
 - **Steps:** directory group membership changes → SCIM `Groups` ops.
-- **Pass:** [ ] groups created/updated [ ] membership maps to QEETID groups → roles (Sprint 2 group RBAC) [ ] filtering (`filter=userName eq …`) works.
+- **Pass:** [ ] groups created/updated [ ] membership maps to Qeet ID groups → roles (Sprint 2 group RBAC) [ ] filtering (`filter=userName eq …`) works.
 
 ### 🧪 SCENARIO 13.4 — Org-level SSO connection (#11)
 - **Steps:** for tenant Acme, configure its own SAML/OIDC IdP + claimed email domain; a user at `@acme.com` is routed to Acme's IdP automatically (home-realm discovery).

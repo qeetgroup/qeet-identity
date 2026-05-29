@@ -8,7 +8,7 @@
 | **Closes** | New differentiator **D5**; supports roadmap **#14 (audit export)** |
 | **Status** | ⬜ Not started |
 
-**Why:** QEETID already has a hash-chained, append-only audit log — a genuine edge. Sprint 5 turns that from "trust us, it's tamper-evident" into **"here's cryptographic proof your auditor can verify independently."** No mainstream CIAM offers externally-verifiable audit.
+**Why:** Qeet ID already has a hash-chained, append-only audit log — a genuine edge. Sprint 5 turns that from "trust us, it's tamper-evident" into **"here's cryptographic proof your auditor can verify independently."** No mainstream CIAM offers externally-verifiable audit.
 
 ---
 
@@ -48,7 +48,7 @@ Tamper-evident audit logs (where they exist) are verified **by the same vendor t
 2. **Inclusion + consistency proofs**: 
    - `GET /v1/tenants/{t}/audit/{event_id}/proof` → Merkle inclusion proof that event E is in checkpoint C.
    - `GET /v1/tenants/{t}/audit/checkpoints` → signed checkpoint history; `…/consistency?from=&to=` → proof that the log is append-only between two checkpoints (no rewrite).
-3. **External anchoring** (optional, pluggable): publish checkpoint roots to an independent witness — an append-only public log, a customer-owned S3 WORM bucket, a transparency-log service, or email-to-self. Even a public Git/RFC3161 timestamp works. The point: the root is recorded **outside** QEETID's control.
+3. **External anchoring** (optional, pluggable): publish checkpoint roots to an independent witness — an append-only public log, a customer-owned S3 WORM bucket, a transparency-log service, or email-to-self. Even a public Git/RFC3161 timestamp works. The point: the root is recorded **outside** Qeet ID's control.
 4. **Standalone verifier**: a tiny open-source CLI (`qeetid-audit-verify`) that takes an event export + proofs + a checkpoint and verifies inclusion/consistency **without touching our servers**. Hand it to your auditor.
 
 ### Design / changes
@@ -68,7 +68,7 @@ Tamper-evident audit logs (where they exist) are verified **by the same vendor t
 - [ ] Checkpoints are produced, signed, and verifiable via the public JWKS key.
 - [ ] Inclusion proof verifies a specific event against a checkpoint.
 - [ ] Consistency proof detects any attempt to rewrite/delete history between checkpoints.
-- [ ] The standalone verifier validates an export **offline** with zero calls to QEETID.
+- [ ] The standalone verifier validates an export **offline** with zero calls to Qeet ID.
 - [ ] At least one anchoring backend (S3 WORM or webhook) records roots externally.
 - [ ] CSV/JSONL export streams large logs without OOM.
 

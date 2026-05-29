@@ -8,7 +8,7 @@
 | **Closes** | Gap **#23** (prebuilt UI components), **#24** (hosted login UI) |
 | **Status** | ⬜ Not started |
 
-**Why:** Clerk's moat is `<SignIn/>`, `<UserProfile/>`, `<OrganizationSwitcher/>` — auth in 15 minutes. WorkOS/Zitadel ship a forkable hosted login app. QEETID has a great internal admin UI and a 36-component library, but **nothing customer-facing**. This closes the integration-surface gap.
+**Why:** Clerk's moat is `<SignIn/>`, `<UserProfile/>`, `<OrganizationSwitcher/>` — auth in 15 minutes. WorkOS/Zitadel ship a forkable hosted login app. Qeet ID has a great internal admin UI and a 36-component library, but **nothing customer-facing**. This closes the integration-surface gap.
 
 ---
 

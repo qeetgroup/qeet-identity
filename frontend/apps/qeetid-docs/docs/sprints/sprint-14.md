@@ -16,7 +16,7 @@
 
 ### 🧪 SCENARIO 14.1 — Generate + open a portal link
 - **Steps:** `POST /v1/portal/link` for tenant Acme (scopes: `sso`,`scim`) → returns a signed, expiring portal URL; open it.
-- **Pass:** [ ] link is tenant-scoped + time-limited [ ] opens a branded portal [ ] expired/tampered link rejected [ ] no QEETID-admin privileges leak (portal user can only touch their tenant's connections).
+- **Pass:** [ ] link is tenant-scoped + time-limited [ ] opens a branded portal [ ] expired/tampered link rejected [ ] no Qeet ID admin privileges leak (portal user can only touch their tenant's connections).
 
 ### 🧪 SCENARIO 14.2 — Customer self-configures SAML SSO via portal
 - **Steps:** as the customer IT admin, in the portal: paste IdP metadata, map attributes, run "Test connection," activate.
@@ -27,9 +27,9 @@
 
 ### 🧪 SCENARIO 14.4 — LDAP/AD bind (#13)
 - **Steps:** configure an LDAP connection (host, bind DN, base DN, TLS); a user authenticates via LDAP bind; attributes/groups sync.
-- **Pass:** [ ] LDAP bind authenticates [ ] StartTLS/LDAPS enforced [ ] group/attribute sync maps to QEETID [ ] connection failures degrade gracefully.
+- **Pass:** [ ] LDAP bind authenticates [ ] StartTLS/LDAPS enforced [ ] group/attribute sync maps to Qeet ID [ ] connection failures degrade gracefully.
 
-**Part A exit:** a non-QEETID "customer admin" persona completes SSO + SCIM setup end-to-end with zero engineering help.
+**Part A exit:** a non-Qeet ID "customer admin" persona completes SSO + SCIM setup end-to-end with zero engineering help.
 
 ---
 

@@ -39,10 +39,10 @@
 - Exposes `GET /v1/sessions/{id}/trust` and emits `session.trust.changed` webhooks; integrates the Sprint-2 `explain` style so you can see **why** trust dropped.
 
 ### B2. Compliance Evidence Autopilot
-**The problem.** SOC 2 / ISO 27001 audits are mostly evidence-gathering toil: screenshots, CSVs, "prove access reviews happened." The data already lives in QEETID's audit log — but nobody turns it into auditor-ready evidence automatically.
+**The problem.** SOC 2 / ISO 27001 audits are mostly evidence-gathering toil: screenshots, CSVs, "prove access reviews happened." The data already lives in Qeet ID's audit log — but nobody turns it into auditor-ready evidence automatically.
 
 **Our solution.**
-- **Control mapping**: map QEETID events/config to common controls (SOC 2 CC-series, ISO 27001 Annex A): e.g. "CC6.1 logical access" ← role assignments + MFA enforcement; "access review" ← periodic effective-permission snapshots; "change management" ← admin config changes.
+- **Control mapping**: map Qeet ID events/config to common controls (SOC 2 CC-series, ISO 27001 Annex A): e.g. "CC6.1 logical access" ← role assignments + MFA enforcement; "access review" ← periodic effective-permission snapshots; "change management" ← admin config changes.
 - **Evidence packs**: `POST /v1/compliance/evidence?framework=soc2&period=…` generates a **signed, audit-anchored** (D5) evidence bundle: access-review reports, MFA-coverage stats, admin-action logs, incident (lockdown D8) records, data-subject requests (D6), key-rotation history (D4) — each linked to verifiable audit proofs.
 - **Continuous posture dashboard**: replaces the admin compliance **stubs** (SOC2/ISO/retention) with real, live posture (e.g. "% users with MFA," "stale admin grants," "overdue access reviews") + scheduled evidence generation + data-retention automation.
 

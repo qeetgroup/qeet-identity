@@ -20,7 +20,7 @@
 
 ### 🧪 SCENARIO 11.2 — Social login start → callback (newly built #2)
 - **Steps:** `GET /v1/social/google/start` → redirect to Google → `GET /v1/social/google/callback?code=…&state=…`.
-- **Expect:** state/PKCE validated; on success a QEETID session is created; external identity linked to a user (created if new).
+- **Expect:** state/PKCE validated; on success a Qeet ID session is created; external identity linked to a user (created if new).
 - **Pass:** [ ] start returns correct authorize URL [ ] state mismatch rejected [ ] callback creates/links identity + session [ ] error from provider handled gracefully.
 
 ### 🧪 SCENARIO 11.3 — Identity link/unlink (already built + extended)

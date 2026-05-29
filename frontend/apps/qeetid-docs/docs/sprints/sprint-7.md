@@ -8,7 +8,7 @@
 | **Closes** | New differentiator **D7**; roadmap **#31 (AI-agent/MCP identity)**, advances **#30 (OAuth 2.1/DCR/token-exchange)** |
 | **Status** | ⬜ Not started |
 
-**Why:** 10–30% of auth traffic is becoming AI-agent traffic, and today agents typically **borrow a human's token** — unscoped, unattributable, unrevocable. The settling 2026 standard is OAuth 2.1 + Dynamic Client Registration + MCP with **delegated, scoped, auditable** agent credentials. We build this as a first-class primitive so QEETID is the safest place to run agents.
+**Why:** 10–30% of auth traffic is becoming AI-agent traffic, and today agents typically **borrow a human's token** — unscoped, unattributable, unrevocable. The settling 2026 standard is OAuth 2.1 + Dynamic Client Registration + MCP with **delegated, scoped, auditable** agent credentials. We build this as a first-class primitive so Qeet ID is the safest place to run agents.
 
 ---
 
@@ -42,7 +42,7 @@ When a user lets an AI agent act for them (a coding agent, a shopping agent, an 
 2. **Delegated tokens with actor chains**: when a human authorizes an agent, mint a token carrying **`sub = agent_id`, `act = { sub: human_id }`** (RFC 8693 token-exchange / actor claim). Resource APIs and the audit log record **both** — "agent X acting for human Y did Z."
 3. **Scoped, time-boxed, revocable**: agent grants are minimal-scope, short-TTL, and independently revocable (`DELETE /v1/agents/{id}/grants/{grant}`) without touching the human's own sessions. A per-human/per-org **agent dashboard** lists active agents and one-click revokes.
 4. **Human-in-the-loop consent for sensitive scopes**: scopes flagged `sensitive` (move money, delete data, change config) require **step-up human approval at use time** (push/email approval, ties to D10 step-up). The agent gets a one-shot, scope-bound capability token only after approval.
-5. **MCP-native handshake**: expose an MCP-compatible authorization endpoint so MCP clients/servers can obtain delegated QEETID tokens through the standard flow; document the integration.
+5. **MCP-native handshake**: expose an MCP-compatible authorization endpoint so MCP clients/servers can obtain delegated Qeet ID tokens through the standard flow; document the integration.
 6. **Full attribution**: every agent action is auditable and shows the delegation chain (anchored via D5).
 
 ### Design / changes

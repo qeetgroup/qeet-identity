@@ -66,7 +66,7 @@
 - [ ] Admin billing + residency/encryption + compliance dashboards real (all stubs replaced).
 - [ ] `platform/*`, `compliance/posture.mdx`, `security/data-residency-byok.mdx` published.
 - [ ] Roadmap: #33–#37 checked; D14 noted; status ✅; changelog filled.
-- [ ] **Program close-out:** update [Competitive Analysis & Roadmap](../COMPETITIVE-ANALYSIS-AND-ROADMAP.md) — flip the full gap matrix; QEETID now covers every analysed category. Re-baseline for the next horizon.
+- [ ] **Program close-out:** update [Competitive Analysis & Roadmap](../COMPETITIVE-ANALYSIS-AND-ROADMAP.md) — flip the full gap matrix; Qeet ID now covers every analysed category. Re-baseline for the next horizon.
 
 ## Changelog
 | Date | Change |

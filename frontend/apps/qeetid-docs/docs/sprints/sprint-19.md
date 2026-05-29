@@ -42,7 +42,7 @@
 ## Part B — Build
 
 ### B1. Fine-grained / ReBAC authz (#29)
-**Backend**: `internal/fga/` — Zanzibar-style relationship store + check/expand/explain, or **embed OpenFGA** as the engine with QEETID as the management/identity layer. Authorization model DSL per tenant; tuple write API; consistency + caching for low-latency `check`. Migration `0044_fga.up.sql`: `fga.tuples`, `fga.models`. Unify with RBAC: roles become a special case; `check` can consult both.
+**Backend**: `internal/fga/` — Zanzibar-style relationship store + check/expand/explain, or **embed OpenFGA** as the engine with Qeet ID as the management/identity layer. Authorization model DSL per tenant; tuple write API; consistency + caching for low-latency `check`. Migration `0044_fga.up.sql`: `fga.tuples`, `fga.models`. Unify with RBAC: roles become a special case; `check` can consult both.
 **Frontend (admin)**: relationship/model editor (extends `access/policies`), tuple browser, ReBAC explain visualizer.
 
 ### B2. OAuth 2.1 standards (#30, #32)

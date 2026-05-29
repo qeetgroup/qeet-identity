@@ -10,7 +10,7 @@
 
 **Why:** SAML 2.0 is the hard requirement that gates B2B/enterprise deals. Every serious competitor (Auth0, WorkOS, Okta, Keycloak, FusionAuth, Zitadel) ships it; we have **nothing** today. This is XL — budget for a conformance pass.
 
-> **Effort note (⏳XL):** the roadmap rates SAML XL. Recommended split: **12a — SAML SP** (QEETID consumes enterprise IdPs: Okta/Azure AD/Google), **12b — SAML IdP** (QEETID acts as IdP to downstream apps). 12a unblocks the common "log in with our corp Okta" case first.
+> **Effort note (⏳XL):** the roadmap rates SAML XL. Recommended split: **12a — SAML SP** (Qeet ID consumes enterprise IdPs: Okta/Azure AD/Google), **12b — SAML IdP** (Qeet ID acts as IdP to downstream apps). 12a unblocks the common "log in with our corp Okta" case first.
 
 ---
 
@@ -27,12 +27,12 @@
 - **Steps:** from the IdP dashboard, launch the app (unsolicited assertion to ACS).
 - **Pass:** [ ] IdP-initiated flow accepted per config [ ] RelayState honored.
 
-### 🧪 SCENARIO 12.3 — QEETID as IdP (12b)
+### 🧪 SCENARIO 12.3 — Qeet ID as IdP (12b)
 - **Steps:** register a downstream SP (metadata); SP-initiated AuthnRequest → our SSO endpoint → signed assertion back.
 - **Pass:** [ ] we issue valid signed assertions [ ] NameID format configurable [ ] attribute mapping works [ ] SLO (single logout) round-trips.
 
 ### 🧪 SCENARIO 12.4 — Attribute & group mapping
-- **Pass:** [ ] IdP attributes map to user profile fields [ ] group claims map to QEETID groups/roles (ties to Sprint 2 group RBAC).
+- **Pass:** [ ] IdP attributes map to user profile fields [ ] group claims map to Qeet ID groups/roles (ties to Sprint 2 group RBAC).
 
 **Part A exit:** interop verified against ≥2 IdPs (Okta + Azure AD or samltest.id); added to a SAML conformance checklist.
 
@@ -58,7 +58,7 @@
 
 ### Acceptance criteria
 - [ ] SP role: validated assertions from Okta + Azure AD produce sessions; all signature/condition/replay checks enforced (negative tests pass).
-- [ ] IdP role: a downstream SP can SSO against QEETID with signed assertions + SLO.
+- [ ] IdP role: a downstream SP can SSO against Qeet ID with signed assertions + SLO.
 - [ ] Encrypted assertions supported; RelayState preserved.
 - [ ] Attribute → profile and group → role mapping works.
 - [ ] No XML-signature-wrapping / comment-injection vulnerabilities (explicit security tests).

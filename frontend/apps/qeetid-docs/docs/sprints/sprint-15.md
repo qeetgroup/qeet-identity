@@ -8,7 +8,7 @@
 | **Closes** | Gaps **#16, #17, #18, #19, #20, #21**; turns the admin `threats/*` + `mfa/*` stubs real; deepens **D10** (continuous trust) |
 | **Status** | ⬜ Not started |
 
-**Why:** Auth0's moat is its **Attack Protection** suite. QEETID has none of it (the admin "threats" screens are mocks). This sprint builds the whole defensive layer at once because the pieces share infrastructure (a risk-signal pipeline). It also feeds **D10 Continuous Trust** (Sprint 10) — if you want richer trust scoring earlier, run this sprint before Sprint 10.
+**Why:** Auth0's moat is its **Attack Protection** suite. Qeet ID has none of it (the admin "threats" screens are mocks). This sprint builds the whole defensive layer at once because the pieces share infrastructure (a risk-signal pipeline). It also feeds **D10 Continuous Trust** (Sprint 10) — if you want richer trust scoring earlier, run this sprint before Sprint 10.
 
 ---
 

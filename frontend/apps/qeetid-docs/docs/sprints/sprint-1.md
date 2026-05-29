@@ -89,7 +89,7 @@ A **Test Mode** that any tenant can flip on (and that's default-on for tenants f
 - New screen **Developers → Dev Inbox**: live table of captured messages with "copy link/code" buttons; tenant test-mode toggle; "Reset test data" button. (Replaces the placeholder dev area.)
 
 **Docs**
-- New `content/docs/testing.mdx`: "Testing QEETID locally — Test Mode, Dev Inbox, magic credentials, clock control," with copy-paste examples that the rest of these sprints reference.
+- New `content/docs/testing.mdx`: "Testing Qeet ID locally — Test Mode, Dev Inbox, magic credentials, clock control," with copy-paste examples that the rest of these sprints reference.
 
 ### Acceptance criteria
 - [ ] Creating an ephemeral test tenant works and it auto-expires.

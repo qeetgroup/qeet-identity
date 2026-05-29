@@ -8,7 +8,7 @@
 | **Closes** | New differentiator **D9**; builds on roadmap **#5** |
 | **Status** | ⬜ Not started |
 
-**Why:** The biggest moat competitors have isn't features — it's **switching cost**. Migrating off Auth0/Cognito/Firebase usually means either forcing every user to reset their password (churn-inducing) or running a fragile lazy-migration bridge. If QEETID can import users **with their existing password hashes intact** and zero forced resets, adoption friction collapses.
+**Why:** The biggest moat competitors have isn't features — it's **switching cost**. Migrating off Auth0/Cognito/Firebase usually means either forcing every user to reset their password (churn-inducing) or running a fragile lazy-migration bridge. If Qeet ID can import users **with their existing password hashes intact** and zero forced resets, adoption friction collapses.
 
 ---
 
@@ -41,7 +41,7 @@ Every vendor's "import" assumes either plaintext passwords (impossible) or their
 1. **Vendor-aware adapters**: importers that understand the export formats of **Auth0, AWS Cognito, Firebase Auth, Clerk, Keycloak, and generic CSV/JSON** — mapping users, emails, verified flags, MFA enrollments where exportable, orgs/tenants, roles, and identities.
 2. **Hash-preserving credentials**: a pluggable **multi-algorithm verifier** (bcrypt, scrypt, PBKDF2-HMAC-SHA1/256, Argon2i/id, Firebase's modified-scrypt, Django-style) so imported users log in with their **existing password**, then get **lazily rehashed** to Argon2id on first successful login (built on #5). **Zero forced resets.**
 3. **Dry-run + reconciliation**: `POST /v1/import/dryrun` validates the file, reports counts, conflicts (email collisions), unsupported hash schemes, and a diff — **before** writing anything. `POST /v1/import/commit` runs it (idempotent, resumable, chunked) and produces a **reconciliation report** (imported / skipped / errored with reasons).
-4. **Identity & org mapping**: bring over social identities (so users keep "Sign in with Google") and map source tenants/orgs/roles to QEETID's model.
+4. **Identity & org mapping**: bring over social identities (so users keep "Sign in with Google") and map source tenants/orgs/roles to Qeet ID's model.
 5. **Cutover playbook**: optional **co-existence mode** — proxy-verify against the old provider for any user not yet migrated (catch-all), so you can flip traffic gradually with zero downtime, then disable once drained.
 
 ### Design / changes

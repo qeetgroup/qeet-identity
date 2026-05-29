@@ -59,8 +59,8 @@
 2. **Tokens are opaque to developers** — debugging "why is this token rejected / what scopes does it carry / when does it expire / which key signed it" means pasting into jwt.io and guessing.
 
 **Our solution.**
-1. **Edge Verification Kit**: publish a tiny, dependency-free verifier (WASM + JS + Go) that validates QEETID JWTs **offline** using cached JWKS, **plus** a compact, signed **revocation epoch / bloom-filter** the edge can pull periodically (`GET /v1/tokens/revocations`) so revoked tokens are caught at the edge without a per-request call home. Short token TTL + revocation digest = near-real-time revocation with edge latency.
-2. **`POST /v1/tokens/explain`**: paste any QEETID token → get a human-readable breakdown: header (alg/kid + "is this key still active in JWKS?"), claims (decoded + descriptions), validity window (with "expires in 4m"), scopes (with what each grants), signature status, and **revocation status**. Safe to expose in the admin "Token Inspector."
+1. **Edge Verification Kit**: publish a tiny, dependency-free verifier (WASM + JS + Go) that validates Qeet ID JWTs **offline** using cached JWKS, **plus** a compact, signed **revocation epoch / bloom-filter** the edge can pull periodically (`GET /v1/tokens/revocations`) so revoked tokens are caught at the edge without a per-request call home. Short token TTL + revocation digest = near-real-time revocation with edge latency.
+2. **`POST /v1/tokens/explain`**: paste any Qeet ID token → get a human-readable breakdown: header (alg/kid + "is this key still active in JWKS?"), claims (decoded + descriptions), validity window (with "expires in 4m"), scopes (with what each grants), signature status, and **revocation status**. Safe to expose in the admin "Token Inspector."
 
 ### Design / changes
 **Backend**

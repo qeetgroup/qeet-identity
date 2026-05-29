@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Window** | 2027-01-25 → 2027-02-12 (3 weeks, ⏳XL) |
-| **Theme** | Make QEETID as easy to adopt as Clerk — ship the SDKs the docs already promise |
+| **Theme** | Make Qeet ID as easy to adopt as Clerk — ship the SDKs the docs already promise |
 | **Depends on** | All prior backend sprints (the API surface to wrap) |
 | **Closes** | Gap **#27** (OpenAPI), **#22** (SDKs), **#28** (CLI) |
 | **Status** | ⬜ Not started |

@@ -1,6 +1,6 @@
-# QEETID — Platform Analysis, Competitive Comparison & Improvement Roadmap
+# Qeet ID — Platform Analysis, Competitive Comparison & Improvement Roadmap
 
-> **Purpose of this document.** This is the single source of truth for *where QEETID stands today*, *how it compares to every major identity platform on the market*, and *what we will build next, in order*. It is written for future developers: read it before planning a sprint so you understand both the gap and the rationale. Each roadmap item has a target window so you can see what was meant to ship when.
+> **Purpose of this document.** This is the single source of truth for *where Qeet ID stands today*, *how it compares to every major identity platform on the market*, and *what we will build next, in order*. It is written for future developers: read it before planning a sprint so you understand both the gap and the rationale. Each roadmap item has a target window so you can see what was meant to ship when.
 >
 > This is an **internal engineering planning document**, not public end-user docs. It lives under `qeetid-docs` so it ships with the docs app and stays close to the team.
 
@@ -20,10 +20,10 @@
 ## Table of contents
 
 1. [Executive summary](#1-executive-summary)
-2. [What QEETID is](#2-what-qeetid-is)
+2. [What Qeet ID is](#2-what-qeet-id-is)
 3. [Current state — verified inventory](#3-current-state--verified-inventory)
 4. [The competitive landscape](#4-the-competitive-landscape)
-5. [Feature gap matrix](#5-feature-gap-matrix-qeetid-vs-the-field)
+5. [Feature gap matrix](#5-feature-gap-matrix-qeet-id-vs-the-field)
 6. [What we missed — prioritised backlog](#6-what-we-missed--prioritised-backlog)
 7. [The roadmap (dated, phase-by-phase)](#7-the-roadmap-dated-phase-by-phase)
 8. [Frontend → backend → docs: per-area improvement plan](#8-frontend--backend--docs-per-area-improvement-plan)
@@ -35,7 +35,7 @@
 
 ## 1. Executive summary
 
-QEETID is a **developer-first, open-source, passkeys-first identity platform** positioned as an affordable, self-hostable alternative to Auth0 / Okta / Clerk / WorkOS. Architecturally it is a **Go modular monolith + PostgreSQL** backend with a **pnpm/Turborepo** frontend (admin dashboard, marketing site, fumadocs docs site) and a shared UI library.
+Qeet ID is a **developer-first, open-source, passkeys-first identity platform** positioned as an affordable, self-hostable alternative to Auth0 / Okta / Clerk / WorkOS. Architecturally it is a **Go modular monolith + PostgreSQL** backend with a **pnpm/Turborepo** frontend (admin dashboard, marketing site, fumadocs docs site) and a shared UI library.
 
 **Where we are strong (production-grade today):**
 
@@ -51,7 +51,7 @@ QEETID is a **developer-first, open-source, passkeys-first identity platform** p
 
 **Where we are behind the market (the gaps this doc is about):**
 
-| Gap | Market expectation | QEETID today |
+| Gap | Market expectation | Qeet ID today |
 |---|---|---|
 | **Enterprise SSO (SAML 2.0)** | Table stakes for B2B | ❌ Not implemented |
 | **SCIM 2.0 directory sync** | Table stakes for B2B | ❌ Not implemented |
@@ -69,7 +69,7 @@ QEETID is a **developer-first, open-source, passkeys-first identity platform** p
 
 ---
 
-## 2. What QEETID is
+## 2. What Qeet ID is
 
 ```
 qeet-identity/
@@ -145,11 +145,11 @@ SAML 2.0 (SP/IdP) · SCIM 2.0 · LDAP/AD federation · adaptive/risk-based MFA �
 
 ## 4. The competitive landscape
 
-Two cohorts matter for QEETID: **commercial CIAM leaders** (set the feature bar and DX expectations) and **open-source / self-hostable** platforms (our direct positioning peers).
+Two cohorts matter for Qeet ID: **commercial CIAM leaders** (set the feature bar and DX expectations) and **open-source / self-hostable** platforms (our direct positioning peers).
 
 ### 4.1 Commercial leaders
 
-**Auth0 (Okta)** — the incumbent. Differentiators: **Actions/Flows** (versioned Node.js extensibility hooks at every pipeline stage), **Adaptive MFA** (risk-scored step-up on untrusted IP / new device / impossible travel), and a full **Attack Protection** suite (ML **Bot Detection**, **Breached Password Detection**, **Brute-Force Protection**, **Suspicious IP Throttling**). Plus **Organizations** (B2B), **Universal Login** (hosted, customizable), huge social/enterprise connection catalog, account linking, and **Auth0 FGA** (relationship-based authz / OpenFGA). Enterprise SSO + SCIM are gated behind expensive tiers — a wedge QEETID can exploit.
+**Auth0 (Okta)** — the incumbent. Differentiators: **Actions/Flows** (versioned Node.js extensibility hooks at every pipeline stage), **Adaptive MFA** (risk-scored step-up on untrusted IP / new device / impossible travel), and a full **Attack Protection** suite (ML **Bot Detection**, **Breached Password Detection**, **Brute-Force Protection**, **Suspicious IP Throttling**). Plus **Organizations** (B2B), **Universal Login** (hosted, customizable), huge social/enterprise connection catalog, account linking, and **Auth0 FGA** (relationship-based authz / OpenFGA). Enterprise SSO + SCIM are gated behind expensive tiers — a wedge Qeet ID can exploit.
 
 **Clerk** — best-in-class **developer experience for React/Next**. Killer feature: **drop-in prebuilt components** — `<SignIn/>`, `<SignUp/>`, `<UserProfile/>`, `<UserButton/>`, `<OrganizationSwitcher/>`, `<OrganizationProfile/>`, `<CreateOrganization/>`, `<OrganizationList/>` — plus hooks (`useUser`, `useSession`, `useSignIn`, `useOrgSwitcher`). **Organizations** with roles/permissions **embedded in the session** (no extra authz round-trip). Hosted account portal, device management, passkeys, magic links. SCIM reached GA in April 2026.
 
@@ -159,11 +159,11 @@ Two cohorts matter for QEETID: **commercial CIAM leaders** (set the feature bar 
 
 **Frontegg / Descope** — B2B self-service admin portal (Frontegg) and **drag-and-drop auth flow builders** (Descope) with strong passwordless. Both emphasize no-code flow customization.
 
-**Supabase Auth / AWS Cognito / Firebase Auth / Google Identity Platform** — bundled-with-platform auth. Cheap/free, broad social, but weaker on enterprise SSO/SCIM and B2B org modeling. Relevant because many of QEETID's target developers default to these.
+**Supabase Auth / AWS Cognito / Firebase Auth / Google Identity Platform** — bundled-with-platform auth. Cheap/free, broad social, but weaker on enterprise SSO/SCIM and B2B org modeling. Relevant because many of Qeet ID's target developers default to these.
 
 ### 4.2 Open-source / self-hostable peers (our direct lane)
 
-**Keycloak** — the most **feature-complete OSS**: OIDC, **SAML 2.0**, **LDAP/AD federation**, SCIM, fine-grained authz, Kerberos. Weaknesses: clunky customization, no official support, dated DX. QEETID's wedge: modern DX + clean multi-tenancy.
+**Keycloak** — the most **feature-complete OSS**: OIDC, **SAML 2.0**, **LDAP/AD federation**, SCIM, fine-grained authz, Kerberos. Weaknesses: clunky customization, no official support, dated DX. Qeet ID's wedge: modern DX + clean multi-tenancy.
 
 **FusionAuth** — polished self-host DX. Notable: **Tenants + Applications**, **per-app Themes**, **Lambdas** (custom logic in OIDC/SAML/SCIM flows), **Connectors** (federation), **Entity Management** + **FGA by Permify**, breached-password detection, **custom registration forms**, advanced OAuth scopes, SCIM, threat detection, WebAuthn, MFA policies, FIPS crypto, self-service account management.
 
@@ -183,11 +183,11 @@ Two cohorts matter for QEETID: **commercial CIAM leaders** (set the feature bar 
 
 ---
 
-## 5. Feature gap matrix (QEETID vs the field)
+## 5. Feature gap matrix (Qeet ID vs the field)
 
 ✅ full · 🟡 partial/stub · ❌ none. Competitor columns are representative of their flagship offering.
 
-| Capability | **QEETID** | Auth0 | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
+| Capability | **Qeet ID** | Auth0 | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | Email/password + sessions | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Refresh rotation + theft detection | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡 | ✅ | ✅ | ✅ |
@@ -228,7 +228,7 @@ Two cohorts matter for QEETID: **commercial CIAM leaders** (set the feature bar 
 | Distributed rate limiting (Redis) | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | SOC2 / ISO27001 posture | ❌ | ✅ | ✅ | ✅ | ✅ | n/a | ✅ | ✅ | ✅ |
 
-**Reading the matrix:** QEETID already matches the field on core auth, OIDC Auth-Code, multi-tenancy, RBAC, and *beats* most on tamper-evident audit. The concentrated red is: **enterprise federation (SAML/SCIM/LDAP), attack protection, fine-grained authz, extensibility, and the integration surface (SDKs + hosted UI + self-serve portal).**
+**Reading the matrix:** Qeet ID already matches the field on core auth, OIDC Auth-Code, multi-tenancy, RBAC, and *beats* most on tamper-evident audit. The concentrated red is: **enterprise federation (SAML/SCIM/LDAP), attack protection, fine-grained authz, extensibility, and the integration surface (SDKs + hosted UI + self-serve portal).**
 
 ---
 
@@ -307,7 +307,7 @@ Grouped by theme. Each item: **why it matters**, **effort** (S ≤1wk, M 1–3wk
 - **Exit criteria:** risk-scored logins trigger step-up; breached creds blocked; admin threat dashboards show real data.
 
 ### Phase 3 — Developer Experience & Extensibility · **Jan 2027 → Mar 2027 (Q1)**
-*Goal: make QEETID as easy to adopt as Clerk; make it extensible like Zitadel/Auth0.*
+*Goal: make Qeet ID as easy to adopt as Clerk; make it extensible like Zitadel/Auth0.*
 - Backlog: **#27 OpenAPI completion (first — SDKs generate from it), #22 client SDKs, #23 prebuilt UI components, #24 hosted login UI, #25 Actions/Hooks, #26 custom registration/account-linking, #28 CLI.**
 - **Exit criteria:** `npm i @qeetid/react` + `<QeetidSignIn/>` gives working auth in <15 min; customers run custom logic via Actions; a forkable hosted login page ships.
 

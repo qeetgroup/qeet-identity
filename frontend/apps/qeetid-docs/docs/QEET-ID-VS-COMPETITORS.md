@@ -1,8 +1,8 @@
-# QEETID vs. the Competition — What Our Platform Supports
+# Qeet ID vs. the Competition — What Our Platform Supports
 
-> A single-page, honest comparison of **what QEETID supports today** against Auth0, Okta, Clerk, WorkOS, Stytch, the bundled clouds (Supabase / Cognito / Firebase), and the open-source field (Keycloak, FusionAuth, Zitadel, Ory).
+> A single-page, honest comparison of **what Qeet ID supports today** against Auth0, Okta, Clerk, WorkOS, Stytch, the bundled clouds (Supabase / Cognito / Firebase), and the open-source field (Keycloak, FusionAuth, Zitadel, Ory).
 >
-> **QEETID in one line:** an open-source, self-hostable, **passkeys-first** identity platform with the developer experience of Clerk, the enterprise model of WorkOS, and a tamper-evident audit log nobody else ships — **without the "SSO tax."**
+> **Qeet ID in one line:** an open-source, self-hostable, **passkeys-first** identity platform with the developer experience of Clerk, the enterprise model of WorkOS, and a tamper-evident audit log nobody else ships — **without the "SSO tax."**
 
 | | |
 |---|---|
@@ -15,7 +15,7 @@
 
 ## How to read this page
 
-| Mark | Meaning for QEETID |
+| Mark | Meaning for Qeet ID |
 |------|--------------------|
 | ✅ | **Supported today** — implemented and wired (verified in source). |
 | 🟡 | **Partial** — present but stubbed, not enforced, or dev-only (e.g. returns `501`, stdout sender). |
@@ -26,7 +26,7 @@ For competitors: ✅ generally available · 🟡 limited/gated/add-on · ❌ not
 
 ---
 
-## 1. What QEETID supports **today** (✅ verified)
+## 1. What Qeet ID supports **today** (✅ verified)
 
 These work right now on a local/self-hosted deployment.
 
@@ -81,13 +81,13 @@ These work right now on a local/self-hosted deployment.
 
 ---
 
-## 3. QEETID vs. competitors — support matrix
+## 3. Qeet ID vs. competitors — support matrix
 
-> Competitor columns reflect each vendor's flagship offering. QEETID column uses the legend above (✅ / 🟡 / 🗓️ S# / ❌).
+> Competitor columns reflect each vendor's flagship offering. Qeet ID column uses the legend above (✅ / 🟡 / 🗓️ S# / ❌).
 
 ### Core authentication
 
-| Capability | **QEETID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
+| Capability | **Qeet ID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | Email/password + sessions | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Refresh rotation **+ theft detection** | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡 | ✅ | ✅ | ✅ |
@@ -100,7 +100,7 @@ These work right now on a local/self-hosted deployment.
 
 ### Protocols & tokens
 
-| Capability | **QEETID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
+| Capability | **Qeet ID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | OIDC provider (Auth Code + PKCE) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | RS256/ES256 + JWKS rotation | 🟡 S4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -110,7 +110,7 @@ These work right now on a local/self-hosted deployment.
 
 ### Enterprise (B2B)
 
-| Capability | **QEETID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
+| Capability | **Qeet ID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | **SAML 2.0 SSO** | 🗓️ S12 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡 |
 | **SCIM 2.0 provisioning** | 🗓️ S13 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
@@ -121,7 +121,7 @@ These work right now on a local/self-hosted deployment.
 
 ### Authorization
 
-| Capability | **QEETID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
+| Capability | **Qeet ID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | RBAC | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡 |
 | Group-level RBAC | 🗓️ S2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -130,7 +130,7 @@ These work right now on a local/self-hosted deployment.
 
 ### Security & operations
 
-| Capability | **QEETID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
+| Capability | **Qeet ID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | Adaptive / risk-based MFA + step-up | 🗓️ S15 | ✅ | 🟡 | 🟡 | ✅ | 🟡 | ✅ | 🟡 | 🟡 |
 | Bot detection | 🗓️ S15 | ✅ | 🟡 | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
@@ -143,7 +143,7 @@ These work right now on a local/self-hosted deployment.
 
 ### Developer experience & extensibility
 
-| Capability | **QEETID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
+| Capability | **Qeet ID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | Prebuilt UI components | 🗓️ S17 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡 |
 | Hosted / embeddable login UI | 🗓️ S17 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡 |
@@ -154,7 +154,7 @@ These work right now on a local/self-hosted deployment.
 
 ### Business model
 
-| Capability | **QEETID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
+| Capability | **Qeet ID** | Auth0/Okta | Clerk | WorkOS | Stytch | Keycloak | FusionAuth | Zitadel | Ory |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | **Open source** | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | 🟡 | ✅ | ✅ |
 | **Self-hostable** | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ |
@@ -166,9 +166,9 @@ These work right now on a local/self-hosted deployment.
 
 ---
 
-## 4. Where QEETID is **different** (and aims to win)
+## 4. Where Qeet ID is **different** (and aims to win)
 
-Beyond matching the field, QEETID is building features that solve problems competitors **don't** — see the [sprint plan](./sprints/README.md) for the full catalog (D1–D14):
+Beyond matching the field, Qeet ID is building features that solve problems competitors **don't** — see the [sprint plan](./sprints/README.md) for the full catalog (D1–D14):
 
 - **Tamper-evident audit you can prove to a third party** — hash-chained today (✅), externally-verifiable Merkle checkpoints next (🗓️ S5). No mainstream CIAM offers independent audit verification.
 - **Explainable Authorization** — a `why was this allowed/denied?` decision trace (🗓️ S2). Every other RBAC system returns a bare boolean.
@@ -185,7 +185,7 @@ Beyond matching the field, QEETID is building features that solve problems compe
 
 ## 5. Honest bottom line
 
-**Use QEETID today for:** password + magic-link auth, TOTP MFA, multi-tenant RBAC with a `check` API, API keys & M2M, an OIDC provider (Auth Code + PKCE), tamper-evident audit, webhooks, and GDPR erasure — all open-source and self-hosted.
+**Use Qeet ID today for:** password + magic-link auth, TOTP MFA, multi-tenant RBAC with a `check` API, API keys & M2M, an OIDC provider (Auth Code + PKCE), tamper-evident audit, webhooks, and GDPR erasure — all open-source and self-hosted.
 
 **Not ready yet (scheduled):** passkeys & social login ceremonies, real email/SMS, RS256/JWKS, SAML/SCIM/LDAP, attack protection, client SDKs & hosted UI, fine-grained authz, billing. Every one of these has a sprint — see the [coverage matrix](./sprints/README.md#coverage-matrix--every-gap-mapped-to-a-sprint).
 
